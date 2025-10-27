@@ -1,0 +1,10 @@
+/* macro/style_dark.css - oscuro */
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg,#0f1720 0%, #1f2933 100%);
+    color: #f2f2f2;
+}
+h1,h2,h3 { color:#FFD54F; }
+[data-testid="stSidebar"] { background:#111827; border-right:2px solid #374151; }
+.stButton>button { background:#FFB300 !important; color:#000 !important; border-radius:10px !important; }
+.block-container { padding-top:1.5rem; }

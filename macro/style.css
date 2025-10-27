@@ -1,0 +1,242 @@
+/* Paleta solar dinámica y moderna */
+:root {
+  /* Paleta principal */
+  --sun-100: #FFF8E1;
+  --sun-200: #FFE0B2;
+  --sun-300: #FFB74D; /* acento principal */
+  --sun-400: #FF9800; /* acento secundario */
+  --sun-500: #F57C00; /* énfasis */
+  --sun-600: #E65100; /* hover */
+  
+  /* Colores complementarios */
+  --sky-100: #E3F2FD;
+  --sky-200: #90CAF9;
+  --sky-300: #42A5F5;
+  
+  /* Colores de acento */
+  --sunset-orange: #FF5722;
+  --sunrise-yellow: #FFC107;
+  --daylight-blue: #03A9F4;
+  
+  /* Utilidades */
+  --contrast-text: #1A237E;
+  --muted: #546E7A;
+  --card-bg: rgba(255,255,255,0.85);
+  --glass: rgba(255,255,255,0.65);
+  --shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+  --radius: 14px;
+}
+
+/* Fondo principal con gradiente dinámico */
+.stApp {
+  background: linear-gradient(
+    135deg,
+    var(--sun-100) 0%,
+    var(--sky-100) 25%,
+    var(--sun-200) 50%,
+    var(--sky-200) 75%,
+    var(--sun-100) 100%
+  ) !important;
+  background-size: 400% 400% !important;
+  animation: gradient 15s ease infinite;
+  min-height: 100vh;
+  background-attachment: fixed;
+}
+
+/* Animación del gradiente */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Títulos con iconos solares */
+h1::before {
+  content: "☀️";
+  margin-right: 10px;
+}
+
+h2::before {
+  content: "🌤️";
+  margin-right: 8px;
+}
+
+h3::before {
+  content: "⚡";
+  margin-right: 8px;
+}
+
+/* Sidebar con efecto glass y decoración */
+[data-testid="stSidebar"] {
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.95),
+    rgba(255,250,235,0.9)
+  ) !important;
+  backdrop-filter: blur(10px);
+  border-right: 2px solid rgba(255,210,100,0.25);
+  padding: 20px !important;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: var(--shadow);
+}
+
+[data-testid="stSidebar"]::before {
+  content: "🌅";
+  font-size: 24px;
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Tarjetas con efecto glass mejorado */
+.stMarkdown, .stDataFrame, .stMetric, .element-container {
+  background: var(--glass) !important;
+  backdrop-filter: blur(8px);
+  border-radius: var(--radius) !important;
+  box-shadow: var(--shadow) !important;
+  padding: 16px !important;
+  border: 1px solid rgba(255,255,255,0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stMarkdown:hover, .stMetric:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.15) !important;
+}
+
+/* Botones con gradiente dinámico */
+.stButton>button, .stDownloadButton>button {
+  background: linear-gradient(
+    45deg,
+    var(--sun-300),
+    var(--sunset-orange),
+    var(--sunrise-yellow),
+    var(--sun-400)
+  ) !important;
+  background-size: 300% 300% !important;
+  animation: button-gradient 8s ease infinite;
+  color: var(--contrast-text) !important;
+  border: none !important;
+  padding: 10px 20px !important;
+  border-radius: var(--radius) !important;
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  transition: all 0.3s ease;
+}
+
+@keyframes button-gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.stButton>button:hover, .stDownloadButton>button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+}
+
+/* DataFrames con estilo solar */
+.stDataFrame thead th {
+  background: linear-gradient(
+    90deg,
+    var(--sun-300),
+    var(--sunrise-yellow)
+  ) !important;
+  color: var(--contrast-text) !important;
+  font-weight: 700;
+  padding: 12px;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.stDataFrame tbody tr:nth-child(even) {
+  background: rgba(255,236,179,0.2) !important;
+}
+
+/* Métricas con íconos */
+.stMetric::before {
+  content: "📊";
+  font-size: 20px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stMetricValue {
+  color: var(--sun-600) !important;
+  font-weight: 800 !important;
+  font-size: 1.8em !important;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+/* Gráficos con marco mejorado */
+.element-container .stPlotlyChart {
+  background: var(--glass);
+  border-radius: var(--radius);
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: var(--shadow);
+}
+
+/* Inputs y selectores estilizados */
+.stSelectbox select,
+.stNumberInput input,
+.stTextInput input {
+  background: var(--glass) !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  border-radius: calc(var(--radius) / 2) !important;
+  padding: 8px 12px !important;
+  transition: all 0.2s ease;
+}
+
+/* Efectos hover para interactividad */
+.stSelectbox select:hover,
+.stNumberInput input:hover,
+.stTextInput input:hover {
+  border-color: var(--sun-300) !important;
+  box-shadow: 0 0 0 2px rgba(255,183,77,0.2);
+}
+
+/* Responsividad mejorada */
+@media (max-width: 900px) {
+  :root {
+    --radius: 12px;
+  }
+  
+  .block-container {
+    padding: 12px !important;
+  }
+  
+  .stButton>button {
+    width: 100% !important;
+    padding: 12px !important;
+  }
+  
+  .stDataFrame {
+    font-size: 14px;
+  }
+}
+
+/* Decoraciones adicionales */
+.stApp::after {
+  content: "☀️";
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 32px;
+  opacity: 0.5;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Accesibilidad mejorada */
+.stButton>button:focus,
+.stDownloadButton>button:focus,
+.stTextInput>input:focus {
+  outline: 3px solid var(--sun-300) !important;
+  outline-offset: 2px;
+}
