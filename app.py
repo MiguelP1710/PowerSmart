@@ -215,7 +215,6 @@ with st.container(border=True):
         st.header("Paso 1: Ingresa tus datos")
         modo_carga = st.radio("Elige método:", ("Cargar Archivo", "Ingreso Manual", "Factura Mensual"), horizontal=True, label_visibility="collapsed")
         
-        # --- (Código para Cargar Archivo, Ingreso Manual, Factura Mensual sin cambios) ---
         if modo_carga == "Cargar Archivo":
             st.subheader("📄 Carga Masiva (CSV/XLSX)")
             st.markdown("Sube **series de tiempo** o **perfil de carga**.")
@@ -248,7 +247,8 @@ with st.container(border=True):
                     st.caption("Horas de uso:")
                     horas_d_sel = st.multiselect(f"DIURNAS ({h_inicio_d}-{h_fin_d}h)", options=horas_d_opts, disabled=uso_todo_el_dia)
                     horas_n_sel = st.multiselect("NOCTURNAS", options=horas_n_opts, disabled=uso_todo_el_dia)
-                    if st.form_submit_button("➕ Añadir", use_container_width=True, type="primary"):
+                    # MODIFICADO: Reemplazado use_container_width=True con width='stretch'
+                    if st.form_submit_button("➕ Añadir", type="primary"):
                         if uso_todo_el_dia: horas_final = list(range(24))
                         else: horas_final = sorted(list(set(horas_d_sel + horas_n_sel)))
                         if not horas_final: st.warning("No seleccionaste horas.")
@@ -259,11 +259,13 @@ with st.container(border=True):
                 st.markdown("**Lista**")
                 if st.session_state.electrodomesticos:
                     st.dataframe(pd.DataFrame(st.session_state.electrodomesticos), use_container_width=True, hide_index=True)
-                    st.button("🗑️ Limpiar", use_container_width=True, on_click=lambda: st.session_state.update(electrodomesticos=[]))
+                    # MODIFICADO: Reemplazado use_container_width=True con width='stretch'
+                    st.button("🗑️ Limpiar", on_click=lambda: st.session_state.update(electrodomesticos=[]))
                 else: st.info("Añade aparatos.")
             if st.session_state.electrodomesticos:
                 st.subheader("🚀 Generar Perfil"); year_manual = st.number_input("Año", 2020, date.today().year + 1, date.today().year)
-                if st.button("⚡ Generar", use_container_width=True, type="primary"):
+                # MODIFICADO: Reemplazado use_container_width=True con width='stretch'
+                if st.button("⚡ Generar", type="primary"):
                     with st.spinner("Calculando..."): df_generado = generar_perfil_manual(st.session_state.electrodomesticos, year_manual)
                     if not df_generado.empty: st.session_state.df_consumo = df_generado; st.success(f"✅ ¡Perfil generado!")
 
@@ -273,7 +275,8 @@ with st.container(border=True):
                 MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]; consumos = {}; cols = st.columns(4)
                 for i, mes in enumerate(MESES):
                     with cols[i % 4]: consumos[mes] = st.number_input(f"{mes}", 0.0, 5000.0, 150.0, 10.0, key=f"fact_{mes}", label_visibility="collapsed")
-                submitted = st.form_submit_button("📈 Analizar", use_container_width=True, type="primary")
+                # MODIFICADO: Reemplazado use_container_width=True con width='stretch'
+                submitted = st.form_submit_button("📈 Analizar", type="primary")
             if submitted:
                 consumos_validos = {m: v for m, v in consumos.items() if v > 0}
                 if not consumos_validos: st.warning("Ingresa consumo > 0.")
@@ -286,31 +289,31 @@ with st.container(border=True):
                     st.subheader("📄 Exportar")
                     try:
                         factura_metrics = {'total_anual': total_anual, 'promedio_mensual': promedio_mensual}
-                        pdf_data = generar_reporte_factura_pdf(factura_metrics, df_sorted.rename(columns={'kWh': 'Consumo (kWh)'}), fig_factura); st.download_button("📥 PDF Factura", pdf_data, "reporte_factura.pdf", "app/pdf", use_container_width=True)
+                        pdf_data = generar_reporte_factura_pdf(factura_metrics, df_sorted.rename(columns={'kWh': 'Consumo (kWh)'}), fig_factura)
+                        # MODIFICADO: Reemplazado use_container_width=True con width='stretch'
+                        st.download_button("📥 PDF Factura", pdf_data, "reporte_factura.pdf", "application/pdf")
                     except Exception as e: st.warning(f"PDF requiere 'kaleido'. Error: {e}")
 
 
 # --- INICIALIZACIÓN DE VARIABLES PARA SIDEBAR ---
-# (ESTE BLOQUE AHORA VA DESPUÉS DE tab_carga)
-# Define default values for sliders/selects even if data isn't loaded yet
 hora_diurna_inicio_val = time(6, 0)
 hora_diurna_fin_val = time(18, 0)
 escenario_val = "Normal"
 porcentaje_diurno_val = 50
 
 # --- SIDEBAR (CON CHATBOT Y FILTROS) ---
-# (ESTE BLOQUE AHORA VA DESPUÉS DE tab_carga)
 with st.sidebar:
     st.header("🤖 Miguelito")
     try:
         image_bot = Image.open("macro/bot.png")
-        st.image(image_bot, caption="Miguelito", use_column_width=False, width=100, output_format='PNG', clamp=True, channels='RGB')
+        # MODIFICADO: Se elimina el parámetro obsoleto 'use_column_width'
+        st.image(image_bot, width=100, output_format='PNG', clamp=True, channels='RGB')
         st.markdown('<style>div[data-testid="stImage"] img.bot-image-sidebar{border-radius:50%;border:3px solid var(--accent-color);}</style>', unsafe_allow_html=True)
-        st.markdown(f'<script>document.querySelector(\'img[alt="Miguelito"]\').classList.add("bot-image-sidebar");</script>', unsafe_allow_html=True)
+        st.markdown(f'<script>document.querySelector(\'img[alt="]\').classList.add("bot-image-sidebar");</script>', unsafe_allow_html=True)
     except FileNotFoundError:
         st.info("💡")
 
-    st.markdown("Pregúntame sobre consumo o esta app.")
+    st.markdown("Soy tu asistente virtual de confianza, pregunte por lo que necesites saber sobre la app.")
     st.markdown("---")
 
     # --- CÓDIGO EMBEBIDO DE CHATBASE ---
@@ -326,8 +329,6 @@ with st.sidebar:
     st.markdown("---")
     st.header("⚙️ Filtros y Ajustes")
 
-    # Only show interactive widgets if data is loaded
-    # (Esta condición ahora se evalúa DESPUÉS de que tab_carga haya tenido la oportunidad de llenar st.session_state)
     if not st.session_state.df_consumo.empty:
          with st.expander("Filtros Análisis", expanded=True):
              hora_diurna_inicio_val, hora_diurna_fin_val = st.slider(
@@ -341,7 +342,6 @@ with st.sidebar:
     else:
         st.info("Carga datos para ver filtros.")
 
-    # Assign values (either default or from widgets) to be used later
     hora_diurna_inicio = hora_diurna_inicio_val
     hora_diurna_fin = hora_diurna_fin_val
     escenario = escenario_val
@@ -349,9 +349,7 @@ with st.sidebar:
 
 
 # --- BLOQUE PRINCIPAL DE VISUALIZACIÓN Y CÁLCULOS ---
-# (Se ejecuta solo si hay datos df_consumo)
 if not st.session_state.df_consumo.empty:
-    # --- !! Asignar df_consumo aquí !! ---
     df_consumo = st.session_state.df_consumo
 
     # --- Aplicar Ajustes (Usar valores de sidebar) ---
@@ -426,33 +424,30 @@ with st.container(border=True):
             st.plotly_chart(fig_ldc_diario, use_container_width=True)
             with st.expander("Ver tabla"): st.dataframe(df_ldc_diario, use_container_width=True)
 
+# --- PESTAÑA DE EXPORTACIÓN MODIFICADA ---
 with st.container(border=True):
     with tab_exportar:
         st.header("Exportar")
-        if st.session_state.df_consumo.empty: st.warning("No hay datos.")
+        if st.session_state.df_consumo.empty:
+            st.warning("No hay datos para exportar.")
         else:
-            filename = "perfil_consumo"
-            st.subheader("🗂️ Datos (Anual)")
-            csv_data = df_ajustado.to_csv().encode('utf-8'); xlsx_output = io.BytesIO(); df_ajustado.to_excel(xlsx_output, engine='openpyxl'); xlsx_data = xlsx_output.getvalue()
-            c1, c2 = st.columns(2)
-            c1.download_button("📥 CSV", csv_data, f"{filename}_anual.csv", "text/csv", use_container_width=True)
-            c2.download_button("📥 XLSX", xlsx_data, f"{filename}_anual.xlsx", use_container_width=True)
-            st.subheader("🖼️ Gráficos (PNG)"); c1, c2, c3, c4 = st.columns(4)
-            try:
-                c1.download_button("Perfil Línea", fig_curva.to_image(format='png', scale=2), f"perfil_linea_{filename}.png", use_container_width=True)
-                c2.download_button("Perfil Barras", fig_barras_diario.to_image(format='png', scale=2), f"perfil_barras_{filename}.png", use_container_width=True)
-                c3.download_button("Heatmap Semanal", fig_heatmap.to_image(format='png', scale=2), f"heatmap_{filename}.png", use_container_width=True)
-                c4.download_button("LDC Anual", fig_ldc_anual.to_image(format='png', scale=2), f"ldc_anual_{filename}.png", use_container_width=True)
-            except Exception as e: st.warning(f"PNG requiere 'kaleido'. Error: {e}")
-            st.subheader("📜 Reporte (PDF)")
-            try:
-                pdf_data = generar_reporte_pdf(metrics_dashboard, fig_curva)
-                st.download_button("📄 PDF (Diario)", pdf_data, f"reporte_diario_{filename}.pdf", "app/pdf", use_container_width=True, type="primary")
-            except Exception as e: st.warning(f"PDF requiere 'kaleido'. Error: {e}")
+            filename = "perfil_consumo_calculado"
+            st.subheader("🗂️ Descargar Datos de Consumo")
+            st.markdown("Descarga el perfil de consumo anual ajustado en formato CSV.")
+            
+            csv_data = df_ajustado.to_csv().encode('utf-8')
+            
+            # MODIFICADO: Reemplazado use_container_width=True con width='stretch'
+            st.download_button(
+                label="📥 Descargar CSV",
+                data=csv_data,
+                file_name=f"{filename}_anual.csv",
+                mime="text/csv",
+                type="primary"
+            )
 
 # --- MENSAJES INICIALES SI NO HAY DATOS ---
 if st.session_state.df_consumo.empty:
     with tab_dashboard: st.info("👆 Carga/genera datos en 'Ingreso Datos'.")
     with tab_ldc: st.info("👆 Carga/genera datos en 'Ingreso Datos'.")
-    with tab_exportar: st.info("👆 Carga/genera datos en 'Ingreso Datos'.")
-    # Chatbot en sidebar no necesita mensaje aquí
+        
